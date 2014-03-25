@@ -1,0 +1,170 @@
+extends ../shared/template
+
+block content
+  h1= title
+
+  .row
+    .small-6.columns
+      h4 addcontxt Information
+      div#local
+        div Service ID:
+          p= user._id
+        div Associated Email:
+          p= user.email
+    .small-6.columns
+      h4 Facebook Information
+      div#facebook
+        if user.facebook.token
+          div Service ID:
+            p= user.facebook.id
+          div Associated Email:
+            p= user.facebook.email
+          div Username:
+            p= user.facebook.name
+          div
+            img(src= user.facebook.profilePhoto)
+          div
+            a(href='/unlink/facebook')
+              label &nbsp
+              button.tiny.radius Unlink Facebook
+        else
+          a(href='/auth/facebook')
+            label &nbsp
+            button.tiny.radius Connect Facebook
+  .row
+    .small-12.columns
+      label &nbsp
+  .row
+    .small-6.columns
+      h4 Twitter Information
+      div#twitter
+        if user.twitter.token
+          div Service ID:
+            p= user.twitter.id
+          div Display Name:
+            p= user.twitter.displayName
+          div Username:
+            p= user.twitter.username
+          div
+            img(src= user.twitter.profilePhoto)
+          div
+            a(href='/unlink/twitter')
+              label &nbsp
+              button.tiny.radius Unlink Twitter
+        else
+          a(href='/auth/twitter')
+            label &nbsp
+            button.tiny.radius Connect Twitter
+    .small-6.columns
+      h4 Google Information
+      div#google
+        if user.google.token
+          div Service ID:
+            p= user.google.id
+          div Associated Email:
+            p= user.google.email
+          div Username:
+            p= user.google.name
+          //div
+            img(src= user.google.profilePhoto)
+          div
+            a(href='/unlink/google')
+              label &nbsp
+              button.tiny.radius Unlink Google
+        else
+          a(href='/auth/google')
+            label &nbsp
+            button.tiny.radius Connect Google
+  .row
+    .small-12.columns
+      label &nbsp
+  .row
+    .small-6.columns
+      h4 Instagram Information
+      div#instagram
+        if user.instagram.token
+          div Service ID:
+            p= user.instagram.id
+          div Display Name:
+            p= user.instagram.displayName
+          div Username:
+            p= user.instagram.username
+          div
+            img(src= user.instagram.profilePhoto)
+          div
+            a(href='/unlink/instagram')
+              label &nbsp
+              button.tiny.radius Unlink Instagram
+        else
+          a(href='/auth/instagram')
+            label &nbsp
+            button.tiny.radius Connect Instagram
+    .small-6.columns
+      h4 Foursquare Information
+      div#foursquare
+        if user.foursquare.token
+          div Service ID:
+            p= user.foursquare.id
+          div Associated Email:
+            p= user.foursquare.email
+          div Display Name:
+            p= user.foursquare.displayName
+          div
+            img(src= user.foursquare.profilePhoto)
+          div
+            a(href='/unlink/foursquare')
+              label &nbsp
+              button.tiny.radius Unlink Foursquare
+        else
+          a(href='/auth/foursquare')
+            label &nbsp
+            button.tiny.radius Connect Foursquare
+  .row
+    .small-12.columns
+      label &nbsp
+  .row
+    .small-12.columns
+      form#updateprofile
+        fieldset
+          legend Please Update Your Profile
+          label Name
+          input(type='text', name='username', autofocus='true')
+          label Enter Your Birthday, Include Date and Time
+          input(type='datetime-local', name='birthday')
+          label Select The Timezone Where You Were Born
+          select(name='DropDownTimezone', id='DropDownTimezone')
+            option(value="-12.0") (GMT -12:00) Eniwetok, Kwajalein
+            option(value="-11.0") (GMT -11:00) Midway Island, Samoa
+            option(value="-10.0") (GMT -10:00) Hawaii
+            option(value="-9.0") (GMT -9:00) Alaska
+            option(value="-8.0") (GMT -8:00) Pacific Time (US &amp; Canada)
+            option(value="-7.0") (GMT -7:00) Mountain Time (US &amp; Canada)
+            option(value="-6.0") (GMT -6:00) Central Time (US &amp; Canada), Mexico City
+            option(value="-5.0") (GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima
+            option(value="-4.0") (GMT -4:00) Atlantic Time (Canada), Caracas, La Paz
+            option(value="-3.5") (GMT -3:30) Newfoundland
+            option(value="-3.0") (GMT -3:00) Brazil, Buenos Aires, Georgetown
+            option(value="-2.0") (GMT -2:00) Mid-Atlantic
+            option(value="-1.0") (GMT -1:00 hour) Azores, Cape Verde Islands
+            option(value="0.0") (GMT) Western Europe Time, London, Lisbon, Casablanca
+            option(value="1.0") (GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris
+            option(value="2.0") (GMT +2:00) Kaliningrad, South Africa
+            option(value="3.0") (GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg
+            option(value="3.5") (GMT +3:30) Tehran
+            option(value="4.0") (GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi
+            option(value="4.5") (GMT +4:30) Kabul
+            option(value="5.0") (GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent
+            option(value="5.5") (GMT +5:30) Bombay, Calcutta, Madras, New Delhi
+            option(value="5.75") (GMT +5:45) Kathmandu
+            option(value="6.0") (GMT +6:00) Almaty, Dhaka, Colombo
+            option(value="7.0") (GMT +7:00) Bangkok, Hanoi, Jakarta
+            option(value="8.0") (GMT +8:00) Beijing, Perth, Singapore, Hong Kong
+            option(value="9.0") (GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk
+            option(value="9.5") (GMT +9:30) Adelaide, Darwin
+            option(value="10.0") (GMT +10:00) Eastern Australia, Guam, Vladivostok
+            option(value="11.0") (GMT +11:00) Magadan, Solomon Islands, New Caledonia
+            option(value="12.0") (GMT +12:00) Auckland, Wellington, Fiji, Kamchatka
+          button#enterbirthday.tiny.radius Input
+  .row
+    .small-12.columns
+      #age

@@ -1,0 +1,17 @@
+extends ../shared/template
+
+block content
+  h1= title
+
+  .row
+    .small-12.columns
+      form(method='POST', action='/register')
+        fieldset
+          legend= title
+          //label Name
+          //input(type='text', name='username', autofocus=true, required=true)
+          label Email
+          input(type='email', name='email', required=true, autofocus='true')
+          label Password
+          input(type='password', name='password', required=true)
+          button.radius.small.expand REGISTER
