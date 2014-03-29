@@ -51,6 +51,7 @@ block content
                     span.activitydata= ' ' + memory.currentweather.description + ', felt like '
                     span.activitydata= memory.currentweather.feelslike
                 if memory.where
+                  img(src='http://maps.googleapis.com/maps/api/staticmap?center='+memory.where.lat+','+memory.where.lng+'&zoom=15&size=400x200&markers=color:blue%7C'+memory.where.lat+','+memory.where.lng+'&sensor=false&key=AIzaSyD7SHoaSpx_SkDf3Qr3MSza5U3qtnEhATw')
                   #lat.hide= memory.where.lat
                   #lng.hide= memory.where.lng
                   table
