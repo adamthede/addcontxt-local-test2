@@ -19,6 +19,19 @@ html(class='no-js', lang='en')
 
       section.top-bar-section
         ul.left
+          if user
+            if user.birthday.formattedBirthday
+              li: a(href='/') Current Age:
+              li: a(href='#')#age
+              script.
+                function howOld(){
+                  setInterval(function(){
+                  $('#age').empty();
+                  var time = moment('#{user.birthday.formattedBirthday}').preciseDiff(new Date());
+                  var $span = $('<span>');
+                  $span.text(time);
+                  $('#age').append($span);
+                }, 1000)};
         ul.right
           if !user
             li: a(href="/") Home
@@ -27,9 +40,15 @@ html(class='no-js', lang='en')
             li.divider
             li: a(href="/login") Login
           if user
-            li: a(href="/")= user.username
             li.divider
-            li: a(href="/logout") Logout
+            li: a(href="/capture") +
+            li.divider
+              li.has-dropdown.not-click
+                a(href="/profile")= user.username
+                ul.dropdown
+                  li: a(href="/socialprofiles") Social Connections
+                  li: a(href="/memories") Memories
+                  li: a(href="/logout") Logout
     .row
       .small-12.columns
         block content
@@ -38,5 +57,8 @@ html(class='no-js', lang='en')
     script(src='/js/vendor/foundation.min.js')
     script(src='/js/vendor/lodash.js')
     script(src='/js/vendor/moment.js')
+    script(src='/js/vendor/readable-range.js')
     script(src='/js/source/main.js')
-
+    script(src='/js/source/birthday.js')
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyD7SHoaSpx_SkDf3Qr3MSza5U3qtnEhATw&sensor=true')
+    block scripts

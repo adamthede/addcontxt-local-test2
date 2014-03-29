@@ -1,0 +1,79 @@
+extends ../shared/template
+
+block content
+  h1= title
+
+  .row
+    .small-12.columns
+      form(method='POST', action='/capture/'+user._id.toString())
+        fieldset
+          legend Capture A Memory
+          .row
+            .small-8.columns
+              label Title
+              input(type='text', name='title', autofocus=true, required=true)
+            .small-4.columns
+              label When
+              div#currentTime= moment(new Date()).format('MMMM Do YYYY, h:mm:ss')
+              #modifiedWhen.hide
+                input(type='datetime-local', name='whenDateModified')
+              label#modifyWhen
+                | Past event?
+                a(href='#')#modifiedWhen= ' Change date and time.'
+          .row
+            .small-8.columns
+              label Who
+              input(type='text', name='who', required=true, value= user.username)
+            .small-4.columns
+              label What
+              input(type='text', name='whatTags', required=true)
+          .row
+            .small-12.columns
+              label Why
+              textarea#why(name='why', placeholder='I had an incredible experience ...')
+              input(type='hidden', name='currentweather')#inputweathercurrent
+              input(type='hidden', name='historicweather')#inputweatherhistoric
+              input(type='hidden', name='provider', value='addcontxt')
+          .row
+            .small-6.columns.hide#locationsection
+              label Where
+              input(type='hidden', name='where')#inputlocation
+              button#queryfoursquare.radius.tiny Get Current Location
+              button#otherlocation.radius.tiny Search Locations
+              #locationsearch.hide
+                label Search Name
+                input(type='text', placeholder='Chipotle')#searchlocation
+                label Enter Location
+                input(type='text', placeholder='Dallas, TX')#citystate
+                button#searchfoursquare.radius.tiny Search Locations
+              label &nbsp
+              #locationdata
+            .small-6.columns.hide#weathersection
+              .row
+                .small-12.columns
+                  #weatherdata
+              .row
+                .small-12.columns
+                  label#oldweather
+                    | Past event?
+                    a(href='#')#historicweather= ' Add historic weather.'
+              .row
+                .small-12.columns
+                  #historicweathersearch.hide
+                    label Select Date
+                    input(type='date', autofocus=true)#historicdate
+                    label Enter Location
+                    input(type='text', placeholder='TN/Nashville')#historicplace
+                    button#gethistoricweather.radius.tiny Get Weather
+                    label &nbsp
+                  #historicweatherdisplay
+              .row
+                .small-12.columns
+                  #map
+          .row
+            .small-12.columns
+              label &nbsp
+              button.radius.small.expand CAPTURE
+
+block scripts
+  script(src='/js/source/memory.js')

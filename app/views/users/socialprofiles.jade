@@ -1,0 +1,121 @@
+extends ../shared/template
+
+block content
+  h1= title
+
+  .row
+    .small-6.columns
+      h4 addcontxt Information
+      div#local
+        div Service ID:
+          p= user._id
+        div Associated Email:
+          p= user.email
+    .small-6.columns
+      h4 Facebook Information
+      div#facebook
+        if user.facebook.token
+          div Service ID:
+            p= user.facebook.id
+          div Associated Email:
+            p= user.facebook.email
+          div Username:
+            p= user.facebook.name
+          div
+            img(src= user.facebook.profilePhoto)
+          div
+            a(href='/unlink/facebook')
+              label &nbsp
+              button.tiny.radius Unlink Facebook
+        else
+          a(href='/auth/facebook')
+            label &nbsp
+            button.tiny.radius Connect Facebook
+  .row
+    .small-12.columns
+      label &nbsp
+  .row
+    .small-6.columns
+      h4 Twitter Information
+      div#twitter
+        if user.twitter.token
+          div Service ID:
+            p= user.twitter.id
+          div Display Name:
+            p= user.twitter.displayName
+          div Username:
+            p= user.twitter.username
+          div
+            img(src= user.twitter.profilePhoto)
+          div
+            a(href='/unlink/twitter')
+              label &nbsp
+              button.tiny.radius Unlink Twitter
+        else
+          a(href='/auth/twitter')
+            label &nbsp
+            button.tiny.radius Connect Twitter
+    .small-6.columns
+      h4 Google Information
+      div#google
+        if user.google.token
+          div Service ID:
+            p= user.google.id
+          div Associated Email:
+            p= user.google.email
+          div Username:
+            p= user.google.name
+          div
+            img(src= user.google.profilePhoto)
+          div
+            a(href='/unlink/google')
+              label &nbsp
+              button.tiny.radius Unlink Google
+        else
+          a(href='/auth/google')
+            label &nbsp
+            button.tiny.radius Connect Google
+  .row
+    .small-12.columns
+      label &nbsp
+  .row
+    .small-6.columns
+      h4 Instagram Information
+      div#instagram
+        if user.instagram.token
+          div Service ID:
+            p= user.instagram.id
+          div Display Name:
+            p= user.instagram.displayName
+          div Username:
+            p= user.instagram.username
+          div
+            img(src= user.instagram.profilePhoto)
+          div
+            a(href='/unlink/instagram')
+              label &nbsp
+              button.tiny.radius Unlink Instagram
+        else
+          a(href='/auth/instagram')
+            label &nbsp
+            button.tiny.radius Connect Instagram
+    .small-6.columns
+      h4 Foursquare Information
+      div#foursquare
+        if user.foursquare.token
+          div Service ID:
+            p= user.foursquare.id
+          div Associated Email:
+            p= user.foursquare.email
+          div Display Name:
+            p= user.foursquare.displayName
+          div
+            img(src= user.foursquare.profilePhoto)
+          div
+            a(href='/unlink/foursquare')
+              label &nbsp
+              button.tiny.radius Unlink Foursquare
+        else
+          a(href='/auth/foursquare')
+            label &nbsp
+            button.tiny.radius Connect Foursquare

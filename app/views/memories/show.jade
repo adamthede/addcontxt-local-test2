@@ -1,0 +1,58 @@
+extends ../shared/template
+
+block content
+  h1 AddContxt
+
+  .row.container
+    .row
+      .small-8.columns#memorytitle
+        h4 Title
+        h3= memory.title
+      .small-4.columns#memorywhen
+        h4 When
+        if memory.whenDateModified
+          div= moment(memory.whenDateModified).format('MMMM Do YYYY, h:mm:ss')
+        else
+          div= moment(memory.whenDateCreated).format('MMMM Do YYYY, h:mm:ss')
+    .row
+      .small-8.columns#memorywho
+        h4 Who
+        each who in memory.who
+          span.individual= who
+      .small-4.columns#memorywhat
+        h4 What
+        each tag in memory.whatTags
+          span.tags= tag
+    .row
+      .small-12.columns#memorywhy
+        h4 Why
+        div= memory.why
+    .row
+      .small-6.columns#memorywhere
+        if memory.where
+          #lat.hide= memory.where.lat
+          #lng.hide= memory.where.lng
+          table
+            tbody
+              tr
+                td.icon(style='background-image:url(' +memory.where.icon+ ')')
+                td
+                  ul.activitydata
+                    li.venuename#venuename= memory.where.venuename
+                    li= memory.where.venueaddress
+                    li= memory.where.venuecitystate
+      .small-6.columns
+        if memory.historicweather
+          span.activitydata= 'Mean Temp: ' + memory.historicweather.meantemp
+          span.activitydata= ', Max Temp: ' + memory.historicweather.maxtemp
+          span.activitydata= ', Min Temp: ' + memory.historicweather.mintemp
+          span.activitydata= ', Total Precipitation: ' + memory.historicweather.precip
+        else if memory.currentweather
+          div
+            img.weathericon(src= memory.currentweather.icon)
+            span.activitydata= ' ' + memory.currentweather.description + ', felt like '
+            span.activitydata= memory.currentweather.feelslike
+        #map
+
+block scripts
+  script(src='/js/source/memoryShow.js')

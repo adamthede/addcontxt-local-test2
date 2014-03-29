@@ -8,22 +8,23 @@ var Mongo = require('mongodb');
 var _ = require('lodash');
 
 function User(user){
-  this.username = '';
-  this.email = '';
-  this.password = '';
-  this.facebook = {id:'', token:'', email:'', name:'', profilePhoto:'', gender:'', profile:''};
-  this.twitter = {id:'', token:'', displayName:'', username:'', profilePhoto:'', profile:''};
-  this.google = {id:'', token:'', email:'', name:'', profile:''};
-  this.foursquare = {id:'', token:'', profile:'', displayName:'', email:'', profilePhoto:''};
-  this.instagram = {id:'', token:'', profile:'', displayName:'', username:'', profilePhoto:'', counts:''};
+  this.dateCreated = new Date();
+  this.username    = 'Profile';
+  this.birthday    = '';
+  this.homeAddress = '';
+  this.email       = '';
+  this.password    = '';
+  this.facebook    = {id:'', token:'', email:'', name:'', profilePhoto:'', gender:'', profile:''};
+  this.twitter     = {id:'', token:'', displayName:'', username:'', profilePhoto:'', profile:''};
+  this.google      = {id:'', token:'', email:'', name:'', profilePhoto:'', profile:''};
+  this.foursquare  = {id:'', token:'', displayName:'', email:'', profilePhoto:'', profile:''};
+  this.instagram   = {id:'', token:'', displayName:'', username:'', profilePhoto:'', counts:'', profile:''};
 }
 
-User.prototype.generateHash = function(password){
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+// ----------------------- INSTANCE METHODS --------------------- //
 
-User.prototype.validPassword = function(password){
-  return bcrypt.compareSync(password, this.password);
+User.prototype.generateHash = function(){
+  this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(8), null);
 };
 
 User.prototype.save = function(fn){
@@ -38,6 +39,8 @@ User.prototype.update = function(fn){
   });
 };
 
+// ----------------------- CLASS METHODS ----------------------- //
+
 User.findById = function(id, fn){
   var _id = Mongo.ObjectID(id);
   users.findOne({_id:_id}, function(err, record){
@@ -46,24 +49,15 @@ User.findById = function(id, fn){
     }else{
       fn(err, null);
     }
-    //fn(err, record);
   });
 };
-/*
-    if(record){
-      fn(record);
-    }else{
-      fn(err);
-    }
-  });
-};
-*/
+
 User.findByEmail = function(email, fn){
   users.findOne({email:email}, function(err, record){
     if(record){
-      fn(_.extend(record, User.prototype));
+      fn(err, _.extend(record, User.prototype));
     }else{
-      fn(err);
+      fn(err, null);
     }
   });
 };
@@ -84,68 +78,9 @@ User.findByEmailAndPassword = function(email, password, fn){
   });
 };
 
-/*
-function hashPassword(password, fn){
-  bcrypt.hash(password, 8, function(err, hash){
-    fn(hash);
-  });
-}
-
-function insert(user, fn){
-  users.findOne({email:user.email}, function(err, userFound){
-    if(!userFound){
-      users.findOne({name:user.username}, function(err, userFound){
-        if(!userFound){
-          users.insert(user, function(err, record){
-            fn(err);
-          });
-        }else{
-          fn();
-        }
-      });
-    }else{
-      fn();
-    }
-  });
-}
-
-User.prototype.comparePassword = function(password){
-  bcrypt.compare(password, this.password, function(err, isMatch){
-    if(err){
-      return err;
-    }else{
-      return isMatch;
-    }
-  });
-};
-
-User.prototype.register = function(fn){
-  var self = this;
-
-  hashPassword(self.password, function(hashedPassword){
-    self.password = hashedPassword;
-    insert(self, function(err){
-      fn();
-    });
-  });
-};
-
-User.findById = function(id, fn){
+User.deleteById = function(id, fn){
   var _id = Mongo.ObjectID(id);
-  users.findOne({_id:_id}, function(err, record){
-    fn(record);
+  users.remove({_id:_id}, function(err, count){
+    fn(count);
   });
 };
-
-User.findByUsername = function(username, fn){
-  users.findOne({username:username}, function(err, record){
-    fn(record);
-  });
-};
-
-User.findByEmail = function(email, fn){
-  users.findOne({email:email}, function(err, record){
-    fn(record);
-  });
-};
-*/

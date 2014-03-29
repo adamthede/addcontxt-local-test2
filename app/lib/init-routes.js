@@ -60,7 +60,7 @@ function load(app, fn){
         }else{
           var newUser = new User();
           newUser.email = email;
-          newUser.password = newUser.generateHash(password);
+          newUser.generateHash();
           newUser.save(function(err){
             if(err){
               throw err;
@@ -170,6 +170,7 @@ function load(app, fn){
             foundUser.google.token = token;
             foundUser.google.name  = profile.displayName;
             foundUser.google.email = profile.emails[0].value;
+            foundUser.google.profilePhoto = profile._json.picture;
             foundUser.google.profile = profile;
 
             foundUser.update(function(err, count){
@@ -257,25 +258,27 @@ function load(app, fn){
 
   var home = require('../routes/home');
   var users = require('../routes/users');
+  var birthday = require('../routes/birthday');
+  var memories = require('../routes/memories');
 
   // Basic Pages
   app.get('/', d, home.index);
 
   // Social Authenticating and Authorizing
   app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email', 'user_photos', 'user_friends', 'read_stream']}));
-  app.get('/auth/facebook/callback', passport.authenticate('facebook', {successRedirect:'/profile', failureRedirect:'/'}));
+  app.get('/auth/facebook/callback', passport.authenticate('facebook', {successRedirect:'/socialprofiles', failureRedirect:'/'}));
   app.get('/unlink/facebook', d, check.ensureAuthenticated, users.unlinkFacebook);
   app.get('/auth/twitter', passport.authenticate('twitter'));
-  app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect:'/profile', failureRedirect:'/'}));
+  app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect:'/socialprofiles', failureRedirect:'/'}));
   app.get('/unlink/twitter', d, check.ensureAuthenticated, users.unlinkTwitter);
-  app.get('/auth/google', passport.authenticate('google', {scope:['profile', 'email']}));
-  app.get('/auth/google/callback', passport.authenticate('google', {successRedirect:'/profile', failureRedirect:'/'}));
+  app.get('/auth/google', passport.authenticate('google', {scope:['profile', 'email', 'https://www.google.com/m8/feeds']}));
+  app.get('/auth/google/callback', passport.authenticate('google', {successRedirect:'/socialprofiles', failureRedirect:'/'}));
   app.get('/unlink/google', d, check.ensureAuthenticated, users.unlinkGoogle);
   app.get('/auth/instagram', passport.authenticate('instagram'));
-  app.get('/auth/instagram/callback', passport.authenticate('instagram', {successRedirect:'/profile', failureRedirect:'/'}));
+  app.get('/auth/instagram/callback', passport.authenticate('instagram', {successRedirect:'/socialprofiles', failureRedirect:'/'}));
   app.get('/unlink/instagram', d, check.ensureAuthenticated, users.unlinkInstagram);
   app.get('/auth/foursquare', passport.authenticate('foursquare'));
-  app.get('/auth/foursquare/callback', passport.authenticate('foursquare', {successRedirect:'/profile', failureRedirect:'/'}));
+  app.get('/auth/foursquare/callback', passport.authenticate('foursquare', {successRedirect:'/socialprofiles', failureRedirect:'/'}));
   app.get('/unlink/foursquare', d, check.ensureAuthenticated, users.unlinkFoursquare);
 
   // User Pages
@@ -288,7 +291,15 @@ function load(app, fn){
     res.redirect('/profile');
   });
   app.get('/profile', d, check.ensureAuthenticated, users.show);
+  app.get('/socialprofiles', d, check.ensureAuthenticated, users.socialprofiles);
+  app.post('/birthday/:id', d, check.ensureAuthenticated, birthday.create);
+  app.post('/homeAddress/:id', d, check.ensureAuthenticated, users.homeAddress);
+  app.post('/username/:id', d, check.ensureAuthenticated, users.updateUsername);
   app.get('/logout', d, users.logout);
+  app.get('/capture', d, check.ensureAuthenticated, memories.fresh);
+  app.post('/capture/:id', d, check.ensureAuthenticated, memories.capture);
+  app.get('/memory/:id', d, check.ensureAuthenticated, memories.show);
+  app.get('/memories', d, check.ensureAuthenticated, memories.index);
   console.log('Routes Loaded');
   fn();
 }
