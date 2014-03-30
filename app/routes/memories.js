@@ -12,7 +12,7 @@ exports.capture = function(req, res){
   var memory = new Memory(req.body);
   memory.insert(function(){
     memory.mkDir(function(){
-      if(req.files.photos && req.body.selfie.slice(0,4) === 'data'){
+      if(req.files.photos && req.body.selfie){
         memory.addPhotos(req.files.photos, function(){
           memory.useSelfie(req.body.selfie, function(selfiepic){
             memory.addSelfie(selfiepic, function(){
@@ -28,7 +28,7 @@ exports.capture = function(req, res){
             res.render('memories/show', {title:memory.title, memory:memory, moment:moment});
           });
         });
-      }else if(req.body.selfie.slice(0,4) === 'data'){
+      }else if(req.body.selfie){
         memory.useSelfie(req.body.selfie, function(selfiepic){
           memory.addSelfie(selfiepic, function(){
             memory.update(function(){
