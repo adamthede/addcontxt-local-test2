@@ -5,7 +5,7 @@ block content
 
   .row
     .small-12.columns
-      form(method='POST', action='/capture/'+user._id.toString())
+      form(method='POST', action='/capture/'+user._id.toString(), enctype='multipart/form-data')#memorydata
         fieldset
           legend Capture A Memory
           .row
@@ -70,6 +70,31 @@ block content
               .row
                 .small-12.columns
                   #map
+          .row
+            .small-6.columns
+              label Include Selfie
+              input(type='hidden', name='selfie')#memoryselfie
+              button.radius.tiny.expand#takeselfie Take Selfie
+              #selfiedisplay.hide
+            .small-6.columns
+              label Add Photos
+              input(type='file', name='photos', multiple)
+          .row
+            .small-12.columns
+              #cameraarea.hide
+                #videostuff
+                  video(width='640', height='480', autoplay='autoplay', muted='true')
+                #camerastuff
+                  .row
+                    .small-6.columns
+                      label &nbsp
+                      button.tiny.radius.alert#takepic Take Selfie
+                    .small-6.columns
+                      label &nbsp
+                      button.tiny.radius#useselfie Select Selfie
+                #canvasarea
+                  label &nbsp
+                  canvas#selfiecanvas(width='640', height='480')
           .row
             .small-12.columns
               label &nbsp

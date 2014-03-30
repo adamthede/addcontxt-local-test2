@@ -12,62 +12,68 @@ block content
       #coordinates.hide= coordinates
   .row
     .small-12.columns
+      table
+        thead
+          th WHEN
+          th WHERE
+  .row
+    .small-12.columns
       each memory in memories
-        .row.container
-          .small-12.columns
-            .row
-              .small-7.columns#memorytitle
-                h4 Title
-                div= memory.title.toUpperCase()
-              .small-5.columns#memorywhen
-                h4 When
+        .row
+          .small-12.columns.containerindex
+            .row.displaybreakindex
+              .small-6.columns
+                h4.memoryindextitle= memory.title.slice(0,35).toUpperCase()+'...'
+              .small-6.columns
                 if memory.whenDateModified
-                  div= moment(memory.whenDateModified).format('MMMM Do YYYY, h:mm:ss')
+                  h4.indextime= moment(memory.whenDateModified).format('ddd MMM Do, YYYY, h:mm a')
                 else
-                  div= moment(memory.whenDateCreated).format('MMMM Do YYYY, h:mm:ss')
-            .row
-              .small-7.columns#memorywho
-                h4 Who
+                  h4.indextime= moment(memory.whenDateCreated).format('ddd MMM Do, YYYY, h:mm a')
+            .row.displaybreak
+              .small-4.columns.memorywhyindex
+                h4 why
+                div= memory.why.slice(0,300)+'...'
+              .small-4.columns
+                if memory.selfie
+                  label &nbsp
+                  div.memoryselfieindex(style='background-image:url(' + memory.selfie + ')')
+                h4 who
                 each who in memory.who
-                  span.individual= who
-              .small-5.columns#memorywhat
-                h4 What
+                  button.tiny.radius.individualindex= who
+                h4 what
                 each tag in memory.whatTags
                   span.tags= tag
-            .row
-              .small-7.columns#memorywhy
-                h4 Why
-                div= memory.why
-              .small-5.columns#memorywhere
-                h4 Where
+                label &nbsp
+              .small-4.columns
+                label &nbsp
+                if memory.where
+                  img.memorymap(src='http://maps.googleapis.com/maps/api/staticmap?center='+memory.where.lat+','+memory.where.lng+'&zoom=15&size=400x200&markers=color:blue%7C'+memory.where.lat+','+memory.where.lng+'&sensor=false&key=AIzaSyD7SHoaSpx_SkDf3Qr3MSza5U3qtnEhATw')
+                  ul.activitydata.activityoverlay
+                    li.venuename#venuename= memory.where.venuename
+                    li= memory.where.venueaddress
+                    li= memory.where.venuecitystate
                 if memory.historicweather
                   span.activitydata= 'Mean Temp: ' + memory.historicweather.meantemp
                   span.activitydata= ', Max Temp: ' + memory.historicweather.maxtemp
                   span.activitydata= ', Min Temp: ' + memory.historicweather.mintemp
                   span.activitydata= ', Total Precipitation: ' + memory.historicweather.precip
-                else
+                else if memory.currentweather
                   div
                     img.weathericon(src= memory.currentweather.icon)
                     span.activitydata= ' ' + memory.currentweather.description + ', felt like '
                     span.activitydata= memory.currentweather.feelslike
-                if memory.where
-                  img(src='http://maps.googleapis.com/maps/api/staticmap?center='+memory.where.lat+','+memory.where.lng+'&zoom=15&size=400x200&markers=color:blue%7C'+memory.where.lat+','+memory.where.lng+'&sensor=false&key=AIzaSyD7SHoaSpx_SkDf3Qr3MSza5U3qtnEhATw')
-                  #lat.hide= memory.where.lat
-                  #lng.hide= memory.where.lng
-                  table
-                    tbody
-                      tr
-                        td.icon(style='background-image:url(' +memory.where.icon+ ')')
-                        td
-                          ul.activitydata
-                            li.venuename#venuename= memory.where.venuename
-                            li= memory.where.venueaddress
-                            li= memory.where.venuecitystate
             .row
-              .small-12.columns
+              label &nbsp
+              .small-4.columns
                 a(href='/memory/'+memory._id.toString()) View This Memory
-        .row
-          .small-12.columns
-            &nbsp
+              .small-8.columns
+                if memory.photos
+                  if memory.photos.length > 4
+                    - for(var i=0; i < 4; i++)
+                      img.memoryphotosindex(src= memory.photos[i])
+                  else if memory.photos.length > 0
+                    each photo in memory.photos
+                      img.memoryphotosindex(src= photo)
+
 block scripts
   script(src='/js/source/memoryIndex.js')

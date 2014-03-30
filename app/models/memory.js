@@ -4,6 +4,8 @@ module.exports = Memory;
 var _ = require('lodash');
 var memories = global.nss.db.collection('memories');
 var Mongo = require('mongodb');
+var fs = require('fs');
+var path = require('path');
 
 function Memory(memory){
   this.userId = new Mongo.ObjectID(memory.userId);
@@ -19,6 +21,7 @@ function Memory(memory){
   this.why = memory.why;
   this.currentweather = memory.currentweather ? JSON.parse(memory.currentweather) : null;
   this.historicweather = memory.historicweather ? JSON.parse(memory.historicweather) : null;
+  this.photos = [];
 }
 
 // ------------------- INSTANCE METHODS ------------------- //
@@ -33,6 +36,50 @@ Memory.prototype.update = function(fn){
   memories.update({_id:this._id}, this, function(err, count){
     fn(count);
   });
+};
+
+Memory.prototype.mkDir = function(fn){
+  var dirname = this._id.toString();
+  var abspath = __dirname + '/../static';
+  var relpath = '/img/memories/' + dirname;
+  fs.mkdirSync(abspath + relpath);
+  this.photoPath = relpath;
+  fn();
+};
+
+Memory.prototype.useSelfie = function(dataUrl, fn){
+  var dataString = dataUrl.split(',')[1];
+  var buffer = new Buffer(dataString, 'base64');
+  var extension = dataUrl.match(/\/(.*)\;/)[1];
+  var fullFileName = 'memorySelfie.'+extension;
+  fs.writeFileSync(fullFileName, buffer, 'binary');
+  fn(fullFileName);
+};
+
+Memory.prototype.addSelfie = function(oldpath, fn){
+  var filename = path.basename(oldpath);
+  var abspath = __dirname + '/../static';
+  var relpath = this.photoPath+'/'+filename;
+
+  fs.renameSync(oldpath, abspath+relpath);
+
+  this.selfie = relpath;
+
+  fn();
+};
+
+Memory.prototype.addPhotos = function(photosArray, fn){
+  var self = this;
+  var abspath = __dirname + '/../static';
+  var relpath;
+  var filename;
+  for(var i = 0; i < photosArray.length; i++){
+    filename = photosArray[i].originalFilename.replace(/\s/g,'');
+    relpath = self.photoPath+'/'+filename;
+    fs.renameSync(photosArray[i].path, abspath+relpath);
+    self.photos.push(relpath);
+  }
+  fn();
 };
 
 // ------------------- CLASS METHODS ---------------------- //

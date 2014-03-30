@@ -23,6 +23,9 @@
     $('#historicweather').click(toggleClassWeather);
     $('#otherlocation').click(toggleClassFoursquare);
     $('#locationdata').on('click', '.activitydata', grabVenue);
+    $('#takeselfie').click(getWebcam);
+    $('#takepic').click(takePic);
+    $('#useselfie').click(useSelfie);
   }
 
   //---------------------------    MODIFY WHEN   ------------------------//
@@ -206,6 +209,47 @@
 
     // Send Selected Venue to the Display Map
     initMap(venuelat, venuelng, 12, venuename);
+  }
+
+  //--------------------------  WEBCAM RELATED ------------------------//
+
+  var photograph;
+
+  function getWebcam(event){
+    if(navigator.webkitGetUserMedia !== null){
+      $('#cameraarea').fadeIn(1000);
+      var options = {video:true, audio:false};
+
+      navigator.webkitGetUserMedia(options,
+          function(stream){
+            var video = document.querySelector('video');
+            video.src = window.webkitURL.createObjectURL(stream);
+          },
+          function(e){
+            alert('You need to allow webcam access for this functionality.');
+            console.log('There was a problem with webkitGetUserMedia');
+          });
+    }
+    event.preventDefault();
+  }
+
+  function takePic(event){
+    var video = document.querySelector('video');
+    var canvas = document.getElementById('selfiecanvas');
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, 640, 480);
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    ctx.putImageData(data, 0, 0);
+    photograph = canvas.toDataURL().toString();
+    $('#memoryselfie').val(photograph);
+    event.preventDefault();
+  }
+
+  function useSelfie(event){
+    $('#cameraarea').fadeOut(500);
+    $('#takeselfie').addClass('hide');
+    $('#selfiedisplay').toggleClass('hide').text('ATTACHED');
+    event.preventDefault();
   }
 
 })();
