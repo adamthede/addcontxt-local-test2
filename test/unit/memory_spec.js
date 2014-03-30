@@ -31,8 +31,10 @@ describe('Memory', function(){
     exec(cmd, function(){
       var origfile = __dirname + '/../fixtures/testfile.jpg';
       var copyfile = __dirname + '/../fixtures/testfile-copy.jpg';
+      var copyfile1 = __dirname + '/../fixtures/testfile1-copy.jpg';
       var copyfile2 = __dirname + '/../fixtures/testfile2-copy.jpg';
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile));
+      fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile1));
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile2));
       global.nss.db.dropDatabase(function(err, result){
         u1 = new User();
@@ -165,6 +167,58 @@ describe('Memory', function(){
       });
     });
   });
+
+  describe('#mkDir', function(){
+    it('should create a memory directory for photos', function(done){
+      m1.mkDir(function(){
+        expect(m1.photoPath).to.be.ok;
+        expect(m1.photoPath).to.equal('/img/memories/'+m1._id.toString());
+        done();
+      });
+    });
+  });
+
+  describe('#useSelfie', function(){
+    var sampleDataURL = 'data:image/gif;base64,R0lGOD lhCwAOAMQfAP////7+/vj4+Hh4eHd3d/v7+/Dw8HV1dfLy8ubm5vX19e3t7fr 6+nl5edra2nZ2dnx8fMHBwYODg/b29np6eujo6JGRkeHh4eTk5LCwsN3d3dfX 13Jycp2dnevr6////yH5BAEAAB8ALAAAAAALAA4AAAVq4NFw1DNAX/o9imAsB tKpxKRd1+YEWUoIiUoiEWEAApIDMLGoRCyWiKThenkwDgeGMiggDLEXQkDoTh CKNLpQDgjeAsY7MHgECgx8YR8oHwNHfwADBACGh4EDA4iGAYAEBAcQIg0Dk gcEIQA7';
+    it('should create a file from the webcam', function(done){
+      m1.useSelfie(sampleDataURL, function(selfiepic){
+        expect(selfiepic).to.be.ok;
+        expect(selfiepic.slice(selfiepic.length - 3, selfiepic.length)).to.equal('gif');
+        done();
+      });
+    });
+  });
+
+  describe('#addSelfie', function(){
+    it('should add the imagepath for the Selfie to the memory', function(done){
+      var oldpath = __dirname + '/../fixtures/testfile-copy.jpg';
+      m1.mkDir(function(){
+        m1.addSelfie(oldpath, function(){
+          expect(m1.selfie).to.be.ok;
+          expect(m1.selfie.length).to.not.equal(0);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('#addPhotos', function(){
+    it('should add photos to the memory', function(done){
+      var oldpath1 = __dirname + '/../fixtures/testfile1-copy.jpg';
+      var oldpath2 = __dirname + '/../fixtures/testfile2-copy.jpg';
+      var photosArray = [{path:oldpath1, originalFilename:'testing1'}, {path:oldpath2, originalFilename:'testing2'}];
+      m1.mkDir(function(){
+        m1.addPhotos(photosArray, function(){
+          expect(m1.photos.length).to.equal(2);
+          done();
+        });
+      });
+    });
+  });
+
+
+
+
 
 // ----------------- CLASS METHODS ------------------- //
 
