@@ -32,8 +32,10 @@ describe('memories', function(){
       var origfile = __dirname + '/../fixtures/testfile.jpg';
       var copyfile = __dirname + '/../fixtures/testfile-copy.jpg';
       var copyfile1 = __dirname + '/../fixtures/testfiles-copy1.jpg';
+      var copyfile2 = __dirname + '/../fixtures/testfiles-copy2.jpg';
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile));
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile1));
+      fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile2));
       global.nss.db.dropDatabase(function(err, result){
         u1 = new User();
         u1.email = 'adam@nomail.com';
@@ -92,6 +94,69 @@ describe('memories', function(){
       .field('whatTags', 'testing, app')
       .field('whenDateModified', '2014-03-03')
       .field('why', 'All good apps have tests')
+      .end(function(err, res){
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should save a memory with selfie in the db via user id', function(done){
+      var id = u1._id.toString();
+      var sampleDataURL = 'data:image/gif;base64,R0lGOD lhCwAOAMQfAP////7+/vj4+Hh4eHd3d/v7+/Dw8HV1dfLy8ubm5vX19e3t7fr 6+nl5edra2nZ2dnx8fMHBwYODg/b29np6eujo6JGRkeHh4eTk5LCwsN3d3dfX 13Jycp2dnevr6////yH5BAEAAB8ALAAAAAALAA4AAAVq4NFw1DNAX/o9imAsB tKpxKRd1+YEWUoIiUoiEWEAApIDMLGoRCyWiKThenkwDgeGMiggDLEXQkDoTh CKNLpQDgjeAsY7MHgECgx8YR8oHwNHfwADBACGh4EDA4iGAYAEBAcQIg0Dk gcEIQA7';
+      request(app)
+      .post('/capture/'+id)
+      .set('cookie', cookie)
+      .field('title', 'Testing My App')
+      .field('provider', 'addcontxt')
+      .field('who', 'Adam Thede, Nat Webb')
+      .field('whatTags', 'testing, app')
+      .field('whenDateModified', '2014-03-03')
+      .field('why', 'All good apps have tests, and this one has a selfie')
+      .field('selfie', sampleDataURL)
+      .end(function(err, res){
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should save a memory with selfie and pics in the db via user id', function(done){
+      var id = u1._id.toString();
+      var sampleDataURL = 'data:image/gif;base64,R0lGOD lhCwAOAMQfAP////7+/vj4+Hh4eHd3d/v7+/Dw8HV1dfLy8ubm5vX19e3t7fr 6+nl5edra2nZ2dnx8fMHBwYODg/b29np6eujo6JGRkeHh4eTk5LCwsN3d3dfX 13Jycp2dnevr6////yH5BAEAAB8ALAAAAAALAA4AAAVq4NFw1DNAX/o9imAsB tKpxKRd1+YEWUoIiUoiEWEAApIDMLGoRCyWiKThenkwDgeGMiggDLEXQkDoTh CKNLpQDgjeAsY7MHgECgx8YR8oHwNHfwADBACGh4EDA4iGAYAEBAcQIg0Dk gcEIQA7';
+      var oldpath1 = __dirname + '/../fixtures/testfiles-copy1.jpg';
+      var oldpath2 = __dirname + '/../fixtures/testfiles-copy2.jpg';
+      var photosArray = [{path:oldpath1, originalFilename:'test1'}, {path:oldpath2, originalFilename:'test2'}];
+      request(app)
+      .post('/capture/'+id)
+      .set('cookie', cookie)
+      .field('title', 'Testing My App')
+      .field('provider', 'addcontxt')
+      .field('who', 'Adam Thede, Nat Webb')
+      .field('whatTags', 'testing, app')
+      .field('whenDateModified', '2014-03-03')
+      .field('why', 'All good apps have tests, this one has a selfie and pics')
+      .field('selfie', sampleDataURL)
+      .field('photos', photosArray)
+      .end(function(err, res){
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+
+    it('should save a memory with pics in the db via user id', function(done){
+      var id = u1._id.toString();
+      var oldpath1 = __dirname + '/../fixtures/testfiles-copy1.jpg';
+      var oldpath2 = __dirname + '/../fixtures/testfiles-copy2.jpg';
+      var photosArray = [{path:oldpath1, originalFilename:'test1'}, {path:oldpath2, originalFilename:'test2'}];
+      request(app)
+      .post('/capture/'+id)
+      .set('cookie', cookie)
+      .field('title', 'Testing My App')
+      .field('provider', 'addcontxt')
+      .field('who', 'Adam Thede, Nat Webb')
+      .field('whatTags', 'testing, app')
+      .field('whenDateModified', '2014-03-03')
+      .field('why', 'All good apps have tests, this one has pics')
+      .field('photos', photosArray)
       .end(function(err, res){
         expect(res.status).to.equal(200);
         done();

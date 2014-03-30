@@ -216,10 +216,6 @@ describe('Memory', function(){
     });
   });
 
-
-
-
-
 // ----------------- CLASS METHODS ------------------- //
 
   describe('.deleteById', function(){
