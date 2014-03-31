@@ -98,7 +98,7 @@ function load(app, fn){
     process.nextTick(function(){
       if(req.user){
         if(!req.user.facebook.token){
-          User.findByEmail(req.user.email, function(foundUser){
+          User.findByEmail(req.user.email, function(err, foundUser){
             console.log('================= FACEBOOK DATA ================');
             console.log(profile);
             foundUser.facebook.id           = profile.id;
@@ -131,7 +131,7 @@ function load(app, fn){
     process.nextTick(function(){
       if(req.user){
         if(!req.user.twitter.token){
-          User.findByEmail(req.user.email, function(foundUser){
+          User.findByEmail(req.user.email, function(err, foundUser){
             console.log('================= TWITTER DATA ================');
             console.log(profile);
             foundUser.twitter.id           = profile.id;
@@ -163,7 +163,7 @@ function load(app, fn){
     process.nextTick(function(){
       if(req.user){
         if(!req.user.google.token){
-          User.findByEmail(req.user.email, function(foundUser){
+          User.findByEmail(req.user.email, function(err, foundUser){
             console.log('==================== GOOGLE DATA ==================');
             console.log(profile);
             foundUser.google.id    = profile.id;
@@ -195,7 +195,7 @@ function load(app, fn){
     process.nextTick(function(){
       if(req.user){
         if(!req.user.instagram.token){
-          User.findByEmail(req.user.email, function(foundUser){
+          User.findByEmail(req.user.email, function(err, foundUser){
             console.log('==================== INSTAGRAM DATA ==================');
             console.log(profile);
             foundUser.instagram.id    = profile.id;
@@ -228,7 +228,7 @@ function load(app, fn){
     process.nextTick(function(){
       if(req.user){
         if(!req.user.foursquare.token){
-          User.findByEmail(req.user.email, function(foundUser){
+          User.findByEmail(req.user.email, function(err, foundUser){
             console.log('==================== FOURSQUARE DATA ==================');
             console.log(profile);
             foundUser.foursquare.id    = profile.id;
