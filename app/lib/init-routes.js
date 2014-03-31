@@ -300,6 +300,8 @@ function load(app, fn){
   app.post('/capture/:id', d, check.ensureAuthenticated, memories.capture);
   app.get('/memory/:id', d, check.ensureAuthenticated, memories.show);
   app.get('/memories', d, check.ensureAuthenticated, memories.index);
+  app.get('/find', d, check.ensureAuthenticated, memories.find);
+  app.get('/memories/alt', d, check.ensureAuthenticated, memories.altindex);
   console.log('Routes Loaded');
   fn();
 }

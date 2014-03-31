@@ -121,7 +121,7 @@ Memory.findByUserAndWhatTag = function(id, tag, fn){
 };
 
 Memory.find = function(query, fn){
-  var limit = query.limit*1 || 3;
+  var limit = query.limit*1 || 5;
   var skip = query.page ? (query.page - 1) * limit : 0;
   var filter = {};
   var sort = [];

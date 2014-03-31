@@ -1,0 +1,37 @@
+extends ../shared/template
+
+block content
+  h1= title
+
+  .row
+    .small-12.columns
+      #memoriesMap
+      &nbsp
+  .row
+    .small-12.columns
+      #coordinates.hide= coordinates
+  .row.altindexnav
+    .small-3.columns.limit
+      label Memories Per Page
+      input#limit(type='text', value='5')
+    .small-6.columns#sortable
+      label &nbsp
+      button.sort.tiny.radius WHEN
+    .small-3.columns
+      label &nbsp
+      button#clearFilters.tiny.radius Clear Filters
+  .row
+    .small-12.columns#memorydisplay
+  .row.altindexnav
+    .small-3.columns
+      label &nbsp
+      button#prev.tiny.radius.expand Previous
+    .small-6.columns
+      label &nbsp
+      p#page 1
+    .small-3.columns
+      label &nbsp
+      button#next.tiny.radius.expand Next
+
+block scripts
+  script(src='/js/source/memoryIndexAlt.js')

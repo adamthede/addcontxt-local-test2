@@ -62,3 +62,23 @@ exports.index = function(req, res){
     res.render('memories/index', {title:req.user.username, memories:memories, moment:moment, coordinates:coordinates});
   });
 };
+
+exports.find = function(req, res){
+  req.query.userId = req.user._id.toString();
+  Memory.find(req.query, function(memories){
+    res.send({memories:memories});
+  });
+};
+
+exports.altindex = function(req, res){
+  Memory.findByUserId(req.user._id.toString(), function(memories){
+    var coordinates = [];
+    for(var i = 0; i < memories.length; i++){
+      if(memories[i].where){
+        coordinates.push([memories[i].where.lat, memories[i].where.lng, memories[i].where.venuename]);
+        coordinates.push('|');
+      }
+    }
+    res.render('memories/altindex', {title:req.user.username, moment:moment, coordinates:coordinates});
+  });
+};

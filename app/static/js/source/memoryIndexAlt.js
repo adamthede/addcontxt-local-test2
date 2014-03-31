@@ -10,18 +10,16 @@
   var memoriesMap;
   var coordinates;
   var markers = [];
-//  var query = {limit:5, page:1, direction:1};
+  var query = {limit:5, page:1, direction:1};
 
   function initialize(){
     prepareMap();
-    /*
     $('#sortable').on('click', '.sort', sortMemories);
     $('#memorydisplay').on('click', '.filter', filterMemories);
     $('#prev').click(clickPrev);
     $('#next').click(clickNext);
     $('#clearFilters').click(clearFilter);
     getAllMemories();
-    */
   }
 
 // ---------------------------------------- MAP STUFF --------------------------------------- //
@@ -63,7 +61,7 @@
   }
 
 // ---------------------------------------- POPULATING MEMORIES TO THE PAGE --------------------------------------- //
-/*
+
   function clearFilter(){
     query = {limit:5, page:1, direction:1};
     generateQuery();
@@ -103,9 +101,13 @@
   }
 
   function clickNext(){
-    query.page++;
-    query.limit = $('#limit').val() * 1 || query.limit;
-    generateQuery();
+    if($('#memorydisplay > div').length < $('#limit').val()){
+      return;
+    }else{
+      query.page++;
+      query.limit = $('#limit').val() * 1 || query.limit;
+      generateQuery();
+    }
   }
 
   function generateQuery(){
@@ -139,14 +141,14 @@
 
     var $3div = $('<div>').addClass('row').addClass('displaybreakindex');
 
-    var $4div = $('<div>').addClass('small-6').addClass('columns').wrap('<a href="' + memory._id.toString() + '"/>');
+    var $4a = $('<a class="small-6 columns" href="/memory/' + memory._id.toString() + '"/>');
     var $5h4 = $('<h4>').addClass('memoryindextitle').addClass('sort');
     if(memory.title.length > 30){
       $5h4.text(memory.title.slice(0,30).toUpperCase()+'...');
     }else{
       $5h4.text(memory.title.toUpperCase());
     }
-    $4div.append($5h4);
+    $4a.append($5h4);
 
     var $6div = $('<div>').addClass('small-6').addClass('columns');
     var $7h4 = $('<h4>').addClass('indextime');
@@ -157,9 +159,9 @@
     }
     $6div.append($7h4);
 
-    $3div.append($4div, $6div);
+    $3div.append($4a, $6div);
 
-    var $8div = $('<div>').addClass('displaybreak');
+    var $8div = $('<div>').addClass('displaybreak').addClass('row');
     var $9div = $('<div>').addClass('small-4').addClass('columns').addClass('memorywhyindex');
     var $10div = $('<div>');
     if(memory.selfie){
@@ -185,6 +187,9 @@
       var tag = memory.whatTags[j];
       $13div.append('<span class="tags filter">'+tag+'</span>');
     }
+
+    var $135br = $('<label>').html('&nbsp;');
+    $13div.append($135br);
 
     var $18div = $('<div>').addClass('small-4').addClass('columns');
     if(memory.where){
@@ -217,18 +222,18 @@
 
 
     var $32div = $('<div>').addClass('row');
-    var $33br = $('<br>');
+    var $33br = $('<label>').html('&nbsp;');
     var $34div = $('<div>').addClass('small-12').addClass('columns');
     if(memory.photos){
       if(memory.photos.length > 4){
         for(var k = 0; k < 4; k++){
-          var photo = memory.photos[k];
-          $34div.append('<img class="memoryphotosindex" src="'+photo+'">');
+          var photo1 = memory.photos[k];
+          $34div.append('<img class="memoryphotosindex" src="'+photo1+'">');
         }
       }else if(memory.photos.length > 0){
         for(var z = 0; z < memory.photos.length; z++){
-          var photo = memory.photos[z];
-          $34div.append('<img class="memoryphotosindex" src="'+photo+'">');
+          var photo2 = memory.photos[z];
+          $34div.append('<img class="memoryphotosindex" src="'+photo2+'">');
         }
       }
     }
@@ -239,5 +244,5 @@
 
     $('#memorydisplay').append($1div);
   }
-*/
+
 })();
